@@ -1,0 +1,28 @@
+name: Go Build
+author: Tanyi Chen
+description: Build Golang Program Cross Platforms
+inputs:
+  input:
+    description: Go Build Parameters, default is empty
+    required: false
+  output:
+    description: Output binary name, default is current folder name
+    required: false
+  output_dir:
+    description: Output directory name, containing all output binary
+    required: false
+    default: build
+  platforms:
+    description: All platforms for building, default is output of `go tool dist list`
+    requried: false
+runs:
+  using: composite
+  steps:
+    - name: Build all golang binary
+      run: $GITHUB_ACTION_PATH/build.sh
+      shell: bash
+      env:
+        INPUT: ${{ inputs.input }}
+        OUTPUT: ${{ inputs.output }}
+        OUTPUT_DIR: ${{ inputs.output_dir }}
+        PLATFORMS: ${{ inputs.platforms }}
