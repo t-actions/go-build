@@ -24,14 +24,23 @@ FAIL_PLATFORMS=""
 for PLATFORM in $PLATFORMS; do
     GOOS=${PLATFORM%/*}
     GOARCH=${PLATFORM#*/}
-    BINARY="${OUTPUT}-${GOOS}-${GOARCH}"
-    if [[ "${GOOS}" == "windows" ]]; then BINARY="${BINARY}.exe"; fi
-    TARGET="${OUTPUT_DIR}/${BINARY}"
 
-    {
-        LOG=$(GOOS=${GOOS} GOARCH=${GOARCH} go build -o ${TARGET} ${INPUT} 2>&1) && \
-        XZ_OPT=-9e tar cJf ${TARGET}.tar.xz ${TARGET} --transform "s/${OUTPUT_DIR}\///g"
-    } || FAIL_PLATFORMS="${FAIL_PLATFORMS} ${PLATFORM}"
+    if [[ "${GOARCH}" == "arm" ]]; then
+        GOARMS=(7 6 5)
+    else
+        GOARMS=("")
+    fi
+
+    for GOARM in "${GOARMS[@]}"; do
+        BINARY="${OUTPUT}-${GOOS}-${GOARCH}${GOARM:+v${GOARM}}"
+        if [[ "${GOOS}" == "windows" ]]; then BINARY="${BINARY}.exe"; fi
+        TARGET="${OUTPUT_DIR}/${BINARY}"
+
+        {
+            LOG=$(GOOS=${GOOS} GOARCH=${GOARCH} GOARM=${GOARM} go build -o ${TARGET} ${INPUT} 2>&1) && \
+            XZ_OPT=-9e tar cJf ${TARGET}.tar.xz ${TARGET} --transform "s/${OUTPUT_DIR}\///g"
+        } || FAIL_PLATFORMS="${FAIL_PLATFORMS} ${PLATFORM}${GOARM:+v${GOARM}}"
+    done
 done
 
 if [[ -n "${FAIL_PLATFORMS}" ]]; then
