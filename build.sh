@@ -38,7 +38,9 @@ for PLATFORM in $PLATFORMS; do
 
         {
             LOG=$(GOOS=${GOOS} GOARCH=${GOARCH} GOARM=${GOARM} go build -o ${TARGET} ${INPUT} 2>&1) && \
-            XZ_OPT=-9e tar cJf ${TARGET}.tar.xz ${TARGET} --transform "s/${OUTPUT_DIR}\///g"
+            XZ_OPT=-9e tar cJf ${TARGET}.tar.xz ${TARGET} --transform "s/${OUTPUT_DIR}\///g" && \
+            sha256sum ${TARGET} > ${TARGET}.sha256 && \
+            sha256sum ${TARGET}.tar.xz > ${TARGET}.tar.xz.sha256
         } || FAIL_PLATFORMS="${FAIL_PLATFORMS} ${PLATFORM}${GOARM:+v${GOARM}}"
     done
 done
