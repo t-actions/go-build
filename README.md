@@ -28,6 +28,10 @@ Github Actions to cross build go binary
 Will build a binary and compress it to `tar.xz` in the format below. (windows binary will have `.exe` suffix)
 
 ```bash
+# For non arm
 ${OUTPUT_DIR}/${OUTPUT}-${GOOS}-${GOARCH}
 ${OUTPUT_DIR}/${OUTPUT}-${GOOS}-${GOARCH}.tar.xz
+# For arm
+${OUTPUT_DIR}/${OUTPUT}-${GOOS}-${GOARCH}v${GOARM}
+${OUTPUT_DIR}/${OUTPUT}-${GOOS}-${GOARCH}v${GOARM}.tar.xz
 ```
