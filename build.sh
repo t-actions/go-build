@@ -2,12 +2,10 @@
 set -ex
 
 if [[ -z "$OUTPUT" ]]; then
-    if [[ -n "$INPUT" ]]; then
-        OUTPUT=$(basename $INPUT | awk '{print $1}' | sed 's/\.go$//g')
-    elif [[ -n "$GITHUB_REPOSITORY" ]]; then
+    if [[ -n "$GITHUB_REPOSITORY" ]]; then
         OUTPUT=$(basename $GITHUB_REPOSITORY)
     else
-        OUTPUT=$(basename $(pwd))
+        OUTPUT="main"
     fi
 fi
 
