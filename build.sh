@@ -14,6 +14,7 @@ if [[ -z "$PLATFORMS" ]]; then
 fi
 
 OUTPUT_DIR=${OUTPUT_DIR:-"build"}
+go get ${INPUT}
 
 set +e
 
